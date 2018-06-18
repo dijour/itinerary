@@ -23,13 +23,8 @@ export class Meeting extends Component {
                 <button>Add Meeting</button>
               </form>
             </section>
-                <div className='wrapper'>
-                  <ul>
-                  </ul>
-                </div>
             </div>
             <section className='display-item'>
-              <div className="wrapper">
                 <ul>
                   {this.props.meetings.map((meeting) => {
                     return (
@@ -44,7 +39,6 @@ export class Meeting extends Component {
                     )
                   })}
                 </ul>
-              </div>
             </section>
           </div>
         );
