@@ -1,58 +1,46 @@
 import React, { Component } from 'react';
 import './App.css';
 import firebase from './firebase.js';
+import { Meeting } from './components/meeting';
 
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      currentItem: '',
-      username: '',
-      items: []
+      clientName: '',
+      date: '',
+      startTime: '',
+      endTime: '',
+      meetingName: '',
+      meetingPurpose: '',
+      meetingMembers: '',
+      meetings: []
     }
     //pass THIS to core methods
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   render() {
+    // return (
+    //   <div>BOOM BEACH</div>
+    // );
     return (
-      <div className='app'>
-        <header>
-            <div className='wrapper'>
-              <h1>Fun Food Friends</h1>
-            </div>
-        </header>
-        <div className='container'>
-        <section className="add-item">
-          <form onSubmit={this.handleSubmit}>
-            <input type="text" name="username" placeholder="What's your name?" onChange={this.handleChange} value={this.state.username} />
-            <input type="text" name="currentItem" placeholder="What are you bringing?" onChange={this.handleChange} value={this.state.currentItem} />
-            <button>Add Item</button>
-          </form>
-        </section>
-            <div className='wrapper'>
-              <ul>
-              </ul>
-            </div>
-        </div>
-        <section className='display-item'>
-          <div className="wrapper">
-            <ul>
-              {this.state.items.map((item) => {
-                return (
-                  <li key={item.id}>
-                    <h3>{item.title}</h3>
-                    <p>brought by: {item.user}</p>
-                    <button onClick={() => this.removeItem(item.id)}>Remove Item</button>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-        </section>
-      </div>
+      <Meeting 
+      clientName={this.state.clientName}
+      date={this.state.date}
+      startTime={this.state.startTime}
+      endTime={this.state.endTime}
+      meetingName={this.state.meetingName}
+      meetingPurpose={this.state.meetingPurpose}
+      meetingMembers={this.state.meetingMembers} 
+      meetings={this.state.meetings} 
+      onChange={this.handleChange} 
+      onSubmit={this.handleSubmit} 
+      removeItem={this.removeItem}
+      />
     );
   }
+
   handleChange(e) {
     this.setState({
       [e.target.name]: e.target.value
@@ -60,39 +48,54 @@ class App extends Component {
   }
   handleSubmit(e) {
     e.preventDefault();
-    const itemsRef = firebase.database().ref('items');
-    const item = {
-      title: this.state.currentItem,
-      user: this.state.username
+    const meetingsRef = firebase.database().ref('meetings');
+    const meeting = {
+      title: this.state.meetingName,
+      client: this.state.clientName,
+      purpose: this.state.meetingPurpose,
+      start: this.state.startTime,
+      end: this.state.endTime,
+      date: this.state.date,
+      people: this.state.meetingMembers
     }
-    itemsRef.push(item);
+    meetingsRef.push(meeting);
     this.setState({
-      currentItem: '',
-      username: ''
+      clientName: '',
+      date: '',
+      startTime: '',
+      endTime: '',
+      meetingName: '',
+      meetingPurpose: '',
+      meetingMembers: ''
     });
   }
 
   componentDidMount() {
-    const itemsRef = firebase.database().ref('items');
-    itemsRef.on('value', (snapshot) => {
-      let items = snapshot.val();
+    const meetingsRef = firebase.database().ref('meetings');
+    meetingsRef.on('value', (snapshot) => {
+      let meetings = snapshot.val();
       let newState = [];
-      for (let item in items) {
+      for (let meeting in meetings) {
         newState.push({
-          id: item,
-          title: items[item].title,
-          user: items[item].user
+               id: meeting,
+            title: meetings[meeting].title,
+           client: meetings[meeting].client,
+          purpose: meetings[meeting].purpose,
+            start: meetings[meeting].start,
+              end: meetings[meeting].end,
+             date: meetings[meeting].date,
+           people: meetings[meeting].people
         });
       }
       this.setState({
-        items: newState
+        meetings: newState
       });
     });
   }
 
   removeItem(itemId) {
-    const itemRef = firebase.database().ref(`/items/${itemId}`);
-    itemRef.remove();
+    const meetingRef = firebase.database().ref(`/meetings/${itemId}`);
+    meetingRef.remove();
   }
 
 
