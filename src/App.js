@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import firebase from './firebase.js';
+import firebase, { auth, provider } from './firebase.js';
 import { Meeting } from './components/meeting';
 
 class App extends Component {
@@ -14,11 +14,14 @@ class App extends Component {
       meetingName: '',
       meetingPurpose: '',
       meetingMembers: '',
-      meetings: []
+      meetings: [],
+      user: null
     }
     //pass THIS to core methods
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
   }
   render() {
     // return (
@@ -34,9 +37,12 @@ class App extends Component {
       meetingPurpose={this.state.meetingPurpose}
       meetingMembers={this.state.meetingMembers} 
       meetings={this.state.meetings} 
+      user={this.state.user}
       onChange={this.handleChange} 
       onSubmit={this.handleSubmit} 
       removeItem={this.removeItem}
+      login={this.login}
+      logout={this.logout}
       />
     );
   }
@@ -71,6 +77,11 @@ class App extends Component {
   }
 
   componentDidMount() {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({ user });
+      } 
+    });
     const meetingsRef = firebase.database().ref('meetings');
     meetingsRef.on('value', (snapshot) => {
       let meetings = snapshot.val();
@@ -96,6 +107,25 @@ class App extends Component {
   removeItem(itemId) {
     const meetingRef = firebase.database().ref(`/meetings/${itemId}`);
     meetingRef.remove();
+  }
+
+  logout() {
+    auth.signOut()
+      .then(() => {
+        this.setState({
+          user: null
+        });
+      });
+  }
+
+  login() {
+    auth.signInWithPopup(provider) 
+      .then((result) => {
+        const user = result.user;
+        this.setState({
+          user
+        });
+      });
   }
 
 

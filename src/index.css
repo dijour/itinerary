@@ -9,7 +9,8 @@ body {
 
 header {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
+  align-items: center;
   color: #fff;
   background-color: #103D5D;
   padding: 33px 0 25px 15px;
@@ -134,4 +135,14 @@ button {
   font-size: 14px;
   box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
   padding: 10px 6px;
+}
+
+img {
+  max-width: 50px;
+  border-radius: 50px;
+  align: right;
+}
+
+.foo {
+  text-align: center;
 }
