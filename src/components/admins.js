@@ -10,14 +10,9 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      clientName: '',
-      date: '',
-      startTime: '',
-      endTime: '',
-      meetingName: '',
-      meetingPurpose: '',
-      meetingMembers: '',
-      meetings: [],
+      adminName: '',
+      adminEmail: '',
+      admins: [],
       user: null
     }
     //pass THIS to core methods
@@ -71,25 +66,15 @@ class App extends Component {
   }
   handleSubmit(e) {
     e.preventDefault();
-    const meetingsRef = firebase.database().ref('meetings');
-    const meeting = {
-      title: this.state.meetingName,
-      client: this.state.clientName,
-      purpose: this.state.meetingPurpose,
-      start: this.state.startTime,
-      end: this.state.endTime,
-      date: this.state.date,
-      people: this.state.meetingMembers
+    const adminsRef = firebase.database().ref('admins');
+    const admin = {
+      name: this.state.adminName,
+      email: this.state.adminEmail
     }
-    meetingsRef.push(meeting);
+    adminsRef.push(admin);
     this.setState({
-      clientName: '',
-      date: '',
-      startTime: '',
-      endTime: '',
-      meetingName: '',
-      meetingPurpose: '',
-      meetingMembers: ''
+        adminName: '',
+        adminEmail: ''
     });
   }
 
@@ -99,20 +84,15 @@ class App extends Component {
         this.setState({ user });
       } 
     });
-    const meetingsRef = firebase.database().ref('meetings');
-    meetingsRef.on('value', (snapshot) => {
-      let meetings = snapshot.val();
+    const adminsRef = firebase.database().ref('admins');
+    adminsRef.on('value', (snapshot) => {
+      let admins = snapshot.val();
       let newState = [];
-      for (let meeting in meetings) {
+      for (let admin in admins) {
         newState.push({
-               id: meeting,
-            title: meetings[meeting].title,
-           client: meetings[meeting].client,
-          purpose: meetings[meeting].purpose,
-            start: meetings[meeting].start,
-              end: meetings[meeting].end,
-             date: meetings[meeting].date,
-           people: meetings[meeting].people
+               id: admins,
+            name: admins[meeting].name,
+           email: admins[meeting].email
         });
       }
       this.setState({

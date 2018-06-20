@@ -42,6 +42,7 @@ export class Meeting extends Component {
                             return (
                             <li key={meeting.id}>
                                 <h3>{meeting.title}</h3>
+                                <h3>Client: {meeting.client}</h3>
                                 <p>On: {meeting.date}</p>
                                 <p>From: {meeting.start} - {meeting.end} </p>
                                 <p>Purpose: {meeting.purpose}</p>
