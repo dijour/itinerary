@@ -9,23 +9,15 @@ export class Meeting extends Component {
                 {/* <div className='wrapper'> */}
                 <h1>Itinerary App</h1>
                     {this.props.user ?
-                        <button onClick={this.props.logout}>Log Out</button>                
-                        :
-                        <button onClick={this.props.login}>Log In</button>              
-                    }
-
-                    {this.props.user ?
                         <div>
                         <div className='user-profile'>
-                            <img src={this.props.user.photoURL} />
+                            <img src={this.props.user.photoURL} alt=""/>
                         </div>
+                        <button onClick={this.props.logout}>Log Out</button> 
                         </div>
                         :
-                        // <div className='wrapper'>
-                        <p></p>
-                        // </div>
+                        <button onClick={this.props.login}>Log In</button>
                     }
-                {/* </div> */}
             </header>
 
             {this.props.user ?
@@ -67,8 +59,6 @@ export class Meeting extends Component {
                     <p className='foo'>You must be logged in to see the potluck list and submit to it.</p>
                 </div>
             }
-
-
           </div>
         );
       }
